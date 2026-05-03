@@ -171,6 +171,8 @@ def upload_mri(request):
 
 @login_required
 def dashboard_data(request):
+    if not hasattr(request.user, 'userprofile') or request.user.userprofile.role != 'doctor':
+        return JsonResponse({'error': 'Access denied'}, status=403)
     start_date = request.GET.get("start")
     end_date = request.GET.get("end")
 
@@ -255,6 +257,8 @@ def logout_view(request):
 
 @login_required
 def dashboard(request):
+    if not hasattr(request.user, 'userprofile') or request.user.userprofile.role != 'doctor':
+        return redirect('home')
     return render(request, "dashboard.html")
 
 
@@ -264,6 +268,8 @@ def dashboard(request):
 
 @login_required
 def export_dashboard(request):
+    if not hasattr(request.user, 'userprofile') or request.user.userprofile.role != 'doctor':
+        return redirect('home')
     queryset = MRIUpload.objects.all()
 
     tumor_data = queryset.values('tumor_type').annotate(count=Count('tumor_type'))

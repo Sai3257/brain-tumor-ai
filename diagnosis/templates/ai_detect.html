@@ -479,12 +479,15 @@
                     <a href="/" class="btn-nav">
                         <i class="fas fa-home me-2"></i>Home
                     </a>
+                    {% if user.is_authenticated and user.userprofile and user.userprofile.role == 'doctor' %}
                     <a href="{% url 'dashboard' %}" class="btn-nav">
                         <i class="fas fa-chart-bar me-2"></i>Dashboard
                     </a>
+                    {% endif %}
                     <a href="{% url 'upload' %}" class="btn-nav">
                         <i class="fas fa-upload me-2"></i>Classic Upload
                     </a>
+                    <span style="color:#0f766e; font-weight:600; font-size:0.9rem; padding:0 4px;"><i class="fas fa-user-circle"></i> {{ user.username }}</span>
                     <a href="{% url 'logout' %}" class="btn-nav">
                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                     </a>

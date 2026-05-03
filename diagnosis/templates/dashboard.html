@@ -343,6 +343,7 @@
         <div class="dash-nav-links">
             <a href="/">Home</a>
             <a href="{% url 'upload' %}">Upload MRI</a>
+            <span style="color:#0f766e; font-weight:600; font-size:0.9rem;"><i class="fas fa-user-circle"></i> {{ request.user.username }}</span>
             <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
         </div>
     </nav>
@@ -581,12 +582,7 @@
             }, 16);
         }
 
-        // Defaults: last 30 days
-        const today = new Date().toISOString().split('T')[0];
-        const past  = new Date(); past.setDate(past.getDate() - 30);
-        document.getElementById('endDate').value   = today;
-        document.getElementById('startDate').value = past.toISOString().split('T')[0];
-
+        // Load all data on initial page load (no date filter)
         loadData();
     </script>
 </body>
