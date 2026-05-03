@@ -1,0 +1,70 @@
+{
+  "success": true,
+  "timestamp": "2026-03-08T12:15:44.940671",
+  "classification": {
+    "tumor_type": "meningioma",
+    "confidence": 88.26827453549825,
+    "probabilities": {
+      "meningioma": 88.26827453549825,
+      "glioma": 4.6926901858007,
+      "pituitary": 4.6926901858007,
+      "notumor": 2.34634509290035
+    },
+    "prediction_quality": "ultra_enhanced_fallback",
+    "raw_confidence": 88.26827453549825,
+    "consensus_score": 0.9248031201665855,
+    "prediction_variance": 0.01191319626484922,
+    "error": null
+  },
+  "segmentation": {
+    "metrics": {
+      "tumor_area": 33385,
+      "tumor_percentage": 50.94146728515625,
+      "centroid": [
+        125,
+        131
+      ],
+      "error": null
+    },
+    "overlay_path": "C:\\Users\\pavan\\OneDrive\\Desktop\\dxc - Copy\\brain_tumor_ai\\media\\ai_results\\segmented_Y1_9Xv4X0m.jpg",
+    "overlay_url": "/media/ai_results/segmented_Y1_9Xv4X0m.jpg",
+    "overlay_available": true
+  },
+  "severity": {
+    "severity_score": 0.74,
+    "severity_level": "high",
+    "risk_level": "Critical",
+    "confidence_score": 0.7,
+    "area_score": 0.9,
+    "type_score": 0.6,
+    "recommendations": [
+      "Urgent medical attention required",
+      "Immediate surgical consultation necessary",
+      "Begin treatment within 2-4 weeks",
+      "Consider radiation therapy and chemotherapy",
+      "Hormone level monitoring may be necessary",
+      "Discuss surgical removal options"
+    ],
+    "error": null
+  },
+  "grad_cam": {
+    "heatmap": true,
+    "heatmap_path": null,
+    "heatmap_url": null
+  },
+  "summary": {
+    "tumor_type": "meningioma",
+    "confidence": 88.26827453549825,
+    "severity_level": "high",
+    "risk_level": "Critical",
+    "requires_attention": true,
+    "recommendation_count": 6,
+    "top_prediction": "meningioma",
+    "all_predictions": {
+      "meningioma": 88.26827453549825,
+      "glioma": 4.6926901858007,
+      "pituitary": 4.6926901858007,
+      "notumor": 2.34634509290035
+    }
+  }
+}

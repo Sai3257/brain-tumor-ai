@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Report — Brain Tumor AI</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/light_theme.css' %}" rel="stylesheet">
+    <style>
+        .result-page {
+            min-height: 100vh;
+            background: var(--bg-subtle);
+        }
+        .result-container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        .images-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .image-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .image-card h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+        .image-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+        }
+        .metrics-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .metrics-card-header {
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .metric-row {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .metric-row:last-child { border-bottom: none; }
+        .metric-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .tumor-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-transform: capitalize;
+        }
+        .progress-wrap { flex: 1; }
+        .confidence-num {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+            margin-left: 0.75rem;
+        }
+        .confidence-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        .action-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        /* Severity-aware badge overrides */
+        .severity-badge-auto {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        @media (max-width: 640px) {
+            .images-grid { grid-template-columns: 1fr; }
+            .metric-row { grid-template-columns: 1fr; gap: 0.4rem; }
+            .action-bar { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body class="result-page">
+    <!-- Navbar -->
+    <nav class="navbar-clean">
+        <a href="/" class="nav-brand">
+            <i class="fas fa-brain"></i> Brain Tumor AI
+        </a>
+        <div class="nav-links">
+            <a href="/" class="btn-outline-clean"><i class="fas fa-home"></i> Home</a>
+            <a href="{% url 'dashboard' %}" class="btn-outline-clean"><i class="fas fa-chart-bar"></i> Dashboard</a>
+            <a href="{% url 'upload' %}" class="btn-primary-clean"><i class="fas fa-upload"></i> Upload New</a>
+            <a href="{% url 'logout' %}" class="btn-danger-clean"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <div class="result-container">
+        <!-- Header -->
+        <div class="page-header fade-up">
+            <div style="width:56px;height:56px;background:var(--primary-light);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+                <i class="fas fa-file-medical" style="font-size:1.4rem;color:var(--primary);"></i>
+            </div>
+            <h1 style="font-size:1.6rem;font-weight:700;color:var(--text-dark);margin:0 0 0.25rem;">Brain Tumor Diagnostic Report</h1>
+            <p style="color:var(--text-muted);margin:0;font-size:0.9rem;">AI-powered medical analysis results</p>
+        </div>
+
+        <!-- MRI Images -->
+        <div class="images-grid fade-up fade-up-1">
+            <div class="image-card">
+                <h3>Uploaded MRI</h3>
+                <img src="{{ image }}" alt="Original MRI Scan">
+            </div>
+            <div class="image-card">
+                <h3>Grad-CAM Heatmap</h3>
+                <img src="{{ heatmap }}" alt="Grad-CAM Visualization">
+            </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metrics-card fade-up fade-up-2">
+            <div class="metrics-card-header">
+                <i class="fas fa-chart-bar" style="margin-right:0.5rem;color:var(--primary);"></i>
+                Analysis Results
+            </div>
+
+            <div class="metric-row">
+                <div class="metric-label">Tumor Type</div>
+                <div class="tumor-name">
+                    {% if tumor == 'notumor' %}
+                        <span class="badge-green"><i class="fas fa-check-circle"></i> No Tumor Detected</span>
+                    {% else %}
+                        <span style="color:var(--danger);">{{ tumor|title }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="metric-row">
+                <div class="metric-label">Confidence</div>
+                <div style="display:flex;align-items:center;gap:0.75rem;width:100%;">
+                    <div style="flex:1;">
+                        <div class="progress-clean">
+                            <div class="progress-fill" id="confidenceBar" style="width:0%;"></div>
+                        </div>
+                    </div>
+                    <span class="confidence-num">{{ confidence }}%</span>
+                </div>
+            </div>
+
+            <div class="metric-row">
+                <div class="metric-label">Severity</div>
+                <div>
+                    {% if severity == 'None' or not severity %}
+                        <span class="severity-badge-auto badge-green">None</span>
+                    {% elif severity|lower == 'low' %}
+                        <span class="severity-badge-auto badge-amber">Low</span>
+                    {% elif severity|lower == 'medium' %}
+                        <span class="severity-badge-auto badge-amber">Medium</span>
+                    {% elif severity|lower == 'high' %}
+                        <span class="severity-badge-auto badge-red">High</span>
+                    {% else %}
+                        <span class="severity-badge-auto badge-gray">{{ severity }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="metric-row">
+                <div class="metric-label">Risk Level</div>
+                <div>
+                    {% if risk|lower == 'safe' or risk|lower == 'none' %}
+                        <span class="severity-badge-auto badge-green"><i class="fas fa-shield-alt"></i> {{ risk }}</span>
+                    {% elif risk|lower == 'moderate' or risk|lower == 'early stage' %}
+                        <span class="severity-badge-auto badge-amber"><i class="fas fa-exclamation-circle"></i> {{ risk }}</span>
+                    {% elif risk|lower == 'critical' %}
+                        <span class="severity-badge-auto badge-red"><i class="fas fa-exclamation-triangle"></i> {{ risk }}</span>
+                    {% else %}
+                        <span class="severity-badge-auto badge-teal">{{ risk }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="action-bar fade-up fade-up-3">
+            <a href="{{ pdf }}" class="btn-success-clean btn-lg-clean">
+                <i class="fas fa-file-pdf"></i> Download Medical Report
+            </a>
+            <a href="{% url 'upload' %}" class="btn-primary-clean btn-lg-clean">
+                <i class="fas fa-upload"></i> Upload Another Scan
+            </a>
+            <a href="/" class="btn-outline-clean btn-lg-clean">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function () {
+            const bar = document.getElementById('confidenceBar');
+            if (bar) {
+                setTimeout(() => { bar.style.width = '{{ confidence }}%'; }, 300);
+            }
+        });
+    </script>
+</body>
+</html>

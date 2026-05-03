@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload MRI — Brain Tumor AI</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/light_theme.css' %}" rel="stylesheet">
+    <style>
+        .page-wrap {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .upload-page-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+        .upload-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2.5rem;
+            max-width: 560px;
+            width: 100%;
+        }
+        .file-name-display {
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-top: 0.5rem;
+            font-weight: 500;
+            display: none;
+        }
+        .mini-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .mini-feature {
+            text-align: center;
+        }
+        .mini-feature i {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 0.4rem;
+        }
+        .mini-feature span {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { animation: spin 0.8s linear infinite; }
+    </style>
+</head>
+<body>
+<div class="page-wrap">
+    <!-- Navbar -->
+    <nav class="navbar-clean">
+        <a href="/" class="nav-brand">
+            <i class="fas fa-brain"></i> Brain Tumor AI
+        </a>
+        <div class="nav-links">
+            <a href="{% url 'dashboard' %}" class="btn-outline-clean">
+                <i class="fas fa-chart-bar"></i> Dashboard
+            </a>
+            <a href="{% url 'logout' %}" class="btn-danger-clean">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Upload Body -->
+    <div class="upload-page-body">
+        <div class="upload-card fade-up">
+            <div style="text-align:center;margin-bottom:2rem;">
+                <div style="width:56px;height:56px;background:var(--primary-light);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+                    <i class="fas fa-brain" style="font-size:1.5rem;color:var(--primary);"></i>
+                </div>
+                <h1 style="font-size:1.5rem;font-weight:700;color:var(--text-dark);margin:0 0 0.25rem;">Brain Tumor Detection</h1>
+                <p style="color:var(--text-muted);font-size:0.9rem;margin:0;">Upload an MRI scan for AI-powered analysis</p>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                {% csrf_token %}
+
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h4 style="font-size:1rem;font-weight:600;color:var(--text-dark);margin:0 0 0.25rem;" id="uploadTitle">
+                        Click or drag to upload MRI image
+                    </h4>
+                    <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Supported: JPG, PNG, DICOM</p>
+                    <input type="file" name="image" id="imageInput" accept="image/*" required
+                           style="display:none;">
+                </div>
+                <div class="file-name-display" id="fileNameDisplay">
+                    <i class="fas fa-check-circle"></i> <span id="fileName"></span>
+                </div>
+
+                <button type="submit" class="btn-primary-clean btn-lg-clean" id="analyzeBtn"
+                        style="width:100%;justify-content:center;margin-top:1.25rem;">
+                    <i class="fas fa-microscope" id="btnIcon"></i>
+                    <span id="btnText">Analyze MRI Scan</span>
+                </button>
+            </form>
+
+            <div class="mini-features">
+                <div class="mini-feature">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Analysis</span>
+                </div>
+                <div class="mini-feature">
+                    <i class="fas fa-chart-line"></i>
+                    <span>95% Accuracy</span>
+                </div>
+                <div class="mini-feature">
+                    <i class="fas fa-bolt"></i>
+                    <span>Instant Results</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const fileInput  = document.getElementById('imageInput');
+    const uploadZone = document.getElementById('uploadZone');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    const fileNameSpan = document.getElementById('fileName');
+    const btnIcon = document.getElementById('btnIcon');
+    const btnText = document.getElementById('btnText');
+
+    uploadZone.addEventListener('click', () => fileInput.click());
+
+    fileInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            document.getElementById('uploadTitle').textContent = 'File selected';
+            fileNameSpan.textContent = file.name;
+            fileNameDisplay.style.display = 'block';
+            uploadZone.style.borderColor = 'var(--primary)';
+            uploadZone.style.background = 'var(--primary-light)';
+        }
+    });
+
+    uploadZone.addEventListener('dragover', e => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', e => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            fileInput.files = e.dataTransfer.files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+    });
+
+    document.getElementById('uploadForm').addEventListener('submit', function () {
+        btnIcon.className = 'fas fa-spinner spinner';
+        btnText.textContent = 'Analyzing...';
+    });
+</script>
+</body>
+</html>

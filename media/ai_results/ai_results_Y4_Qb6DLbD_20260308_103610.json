@@ -1,0 +1,62 @@
+{
+  "success": true,
+  "timestamp": "2026-03-08T10:36:10.475918",
+  "classification": {
+    "tumor_type": "notumor",
+    "confidence": 97.06714222486477,
+    "probabilities": {
+      "notumor": 97.06714222486477,
+      "glioma": 0.9776192583784109,
+      "meningioma": 0.9776192583784109,
+      "pituitary": 0.9776192583784109
+    },
+    "prediction_quality": "ultra_enhanced_fallback",
+    "raw_confidence": 97.06714222486477,
+    "consensus_score": 0.8646704627904533,
+    "prediction_variance": 0.019244091923966016,
+    "error": null
+  },
+  "segmentation": {
+    "metrics": {
+      "tumor_area": 30336,
+      "tumor_percentage": 46.2890625,
+      "centroid": [
+        126,
+        131
+      ],
+      "error": null
+    },
+    "overlay_path": "C:\\Users\\pavan\\OneDrive\\Desktop\\dxc - Copy\\brain_tumor_ai\\media\\ai_results\\segmented_Y4_Qb6DLbD.jpg",
+    "overlay_url": "/media/ai_results/segmented_Y4_Qb6DLbD.jpg",
+    "overlay_available": true
+  },
+  "severity": {
+    "severity_score": 0.63,
+    "severity_level": "high",
+    "risk_level": "Safe",
+    "confidence_score": 0.9,
+    "area_score": 0.9,
+    "type_score": 0.0,
+    "recommendations": [
+      "No tumor detected - continue regular checkups",
+      "Maintain healthy lifestyle",
+      "Annual MRI scans recommended"
+    ],
+    "error": null
+  },
+  "summary": {
+    "tumor_type": "notumor",
+    "confidence": 97.06714222486477,
+    "severity_level": "high",
+    "risk_level": "Safe",
+    "requires_attention": true,
+    "recommendation_count": 3,
+    "top_prediction": "notumor",
+    "all_predictions": {
+      "notumor": 97.06714222486477,
+      "glioma": 0.9776192583784109,
+      "meningioma": 0.9776192583784109,
+      "pituitary": 0.9776192583784109
+    }
+  }
+}

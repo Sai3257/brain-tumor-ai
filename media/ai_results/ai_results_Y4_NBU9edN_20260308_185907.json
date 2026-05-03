@@ -1,0 +1,66 @@
+{
+  "success": true,
+  "timestamp": "2026-03-08T18:59:07.278003",
+  "classification": {
+    "tumor_type": "glioma",
+    "confidence": 93.22983904356062,
+    "probabilities": {
+      "glioma": 93.22983904356062,
+      "meningioma": 2.7080643825757535,
+      "pituitary": 2.7080643825757535,
+      "notumor": 1.3540321912878768
+    },
+    "prediction_quality": "ultra_enhanced_fallback",
+    "raw_confidence": 93.22983904356062,
+    "consensus_score": 0.8821010501287769,
+    "prediction_variance": 0.028617313406780927,
+    "error": null
+  },
+  "segmentation": {
+    "metrics": {
+      "tumor_area": 30336,
+      "tumor_percentage": 46.2890625,
+      "centroid": [
+        126,
+        131
+      ],
+      "error": null
+    },
+    "overlay_path": "C:\\Users\\pavan\\OneDrive\\Desktop\\dxc - Copy\\brain_tumor_ai\\media\\ai_results\\segmented_Y4_NBU9edN.jpg",
+    "overlay_url": "/media/ai_results/segmented_Y4_NBU9edN.jpg",
+    "overlay_available": true
+  },
+  "severity": {
+    "severity_score": 0.8887499999999999,
+    "severity_level": "very_high",
+    "risk_level": "Unknown",
+    "confidence_score": 0.9,
+    "area_score": 0.9,
+    "type_score": 0.8624999999999999,
+    "recommendations": [
+      "Consider genetic testing for personalized treatment",
+      "Discuss clinical trial options"
+    ],
+    "error": null
+  },
+  "grad_cam": {
+    "heatmap": true,
+    "heatmap_path": null,
+    "heatmap_url": null
+  },
+  "summary": {
+    "tumor_type": "glioma",
+    "confidence": 93.22983904356062,
+    "severity_level": "very_high",
+    "risk_level": "Unknown",
+    "requires_attention": false,
+    "recommendation_count": 2,
+    "top_prediction": "glioma",
+    "all_predictions": {
+      "glioma": 93.22983904356062,
+      "meningioma": 2.7080643825757535,
+      "pituitary": 2.7080643825757535,
+      "notumor": 1.3540321912878768
+    }
+  }
+}

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor AI — Medical Diagnostic Platform</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/light_theme.css' %}" rel="stylesheet">
+    <style>
+        /* Page layout */
+        .page-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        /* Hero */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            padding: 3rem 0 2rem;
+        }
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero-brain-icon {
+            width: 200px;
+            height: 200px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            color: var(--primary);
+        }
+        .hero-tag {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-pill);
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .hero-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        .hero-title span { color: var(--primary); }
+        .hero-subtitle {
+            font-size: 1rem;
+            color: var(--text-body);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+        .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Symptoms section */
+        .symptoms-section { margin-bottom: 3rem; }
+        .symptom-group { margin-bottom: 1rem; }
+        .symptom-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-dark); margin-bottom: 0.35rem; }
+        .symptom-group select {
+            width: 100%;
+            padding: 0.6rem 0.875rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-subtle);
+            color: var(--text-dark);
+            font-size: 0.875rem;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .symptom-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15,118,110,0.15);
+        }
+
+        /* Symptoms results */
+        .results-hidden { display: none; }
+        .severity-display { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .severity-box { text-align: center; padding: 1rem; background: var(--bg-subtle); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+        .severity-box .label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .severity-box .value { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+
+        .reco-list { list-style: none; padding: 0; margin: 0; }
+        .reco-list li {
+            padding: 0.6rem 0.875rem;
+            margin-bottom: 0.4rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            border-left: 3px solid var(--primary);
+            background: var(--primary-light);
+            color: var(--text-dark);
+        }
+        .reco-list.warning li { border-left-color: var(--warning); background: #fef3c7; }
+        .reco-list.emergency li { border-left-color: var(--danger); background: #fee2e2; font-weight: 600; }
+
+        /* Activity table wrapper */
+        .table-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 3rem;
+        }
+        .table-card-header {
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        /* Quick actions */
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 2rem 0 1rem;
+        }
+
+        /* Section header */
+        .section-header { margin-bottom: 1.5rem; }
+
+        /* Badge color helpers for symptom output */
+        .badge-severity-minimal  { background: #dcfce7; color: #16a34a; }
+        .badge-severity-mild     { background: #dbeafe; color: #1d4ed8; }
+        .badge-severity-moderate { background: #fef3c7; color: #d97706; }
+        .badge-severity-severe   { background: #fee2e2; color: #dc2626; }
+        .badge-severity-critical { background: #fce7f3; color: #9d174d; }
+        .badge-urgency-routine   { background: #f1f5f9; color: #64748b; }
+        .badge-urgency-soon      { background: #fef3c7; color: #d97706; }
+        .badge-urgency-urgent    { background: #fee2e2; color: #dc2626; }
+        .badge-urgency-emergency { background: #fce7f3; color: #9d174d; }
+        .sev-badge, .urg-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; text-align: center; }
+            .hero-buttons { justify-content: center; }
+            .hero-visual { display: none; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 580px) {
+            .hero-title { font-size: 1.8rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: 1fr; }
+            .severity-display { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar-clean">
+        <a href="/" class="nav-brand">
+            <i class="fas fa-brain"></i> Brain Tumor AI
+        </a>
+        <div class="nav-links">
+            {% if user.is_authenticated %}
+                <a href="{% url 'upload' %}" class="btn-outline-clean"><i class="fas fa-upload"></i> Upload MRI</a>
+                <a href="{% url 'dashboard' %}" class="btn-outline-clean"><i class="fas fa-chart-bar"></i> Dashboard</a>
+                <a href="{% url 'logout' %}" class="btn-danger-clean"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-outline-clean"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="{% url 'register' %}" class="btn-primary-clean"><i class="fas fa-user-plus"></i> Get Started</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="page-container">
+
+        <!-- Hero Section -->
+        <div class="hero fade-up">
+            <div>
+                <span class="hero-tag">AI-Powered Diagnostics</span>
+                <h1 class="hero-title">Advanced <span>Brain Tumor</span> Detection System</h1>
+                <p class="hero-subtitle">
+                    Upload MRI scans for instant AI analysis. Detect glioma, meningioma, pituitary tumors,
+                    and more with 94%+ accuracy — powered by deep learning.
+                </p>
+                <div class="hero-buttons">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'upload' %}" class="btn-primary-clean btn-lg-clean">
+                            <i class="fas fa-upload"></i> Upload MRI Scan
+                        </a>
+                        <a href="{% url 'dashboard' %}" class="btn-outline-clean btn-lg-clean">
+                            <i class="fas fa-chart-bar"></i> View Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="btn-primary-clean btn-lg-clean">
+                            <i class="fas fa-user-plus"></i> Get Started Free
+                        </a>
+                        <a href="{% url 'login' %}" class="btn-outline-clean btn-lg-clean">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-brain-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card-clean fade-up fade-up-1">
+                <div class="stat-icon-clean"><i class="fas fa-microscope"></i></div>
+                <div class="stat-value-clean" id="totalScans">—</div>
+                <div class="stat-label-clean">Total Scans</div>
+            </div>
+            <div class="stat-card-clean fade-up fade-up-2">
+                <div class="stat-icon-clean"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-value-clean" id="avgConfidence">—</div>
+                <div class="stat-label-clean">Avg Confidence</div>
+            </div>
+            <div class="stat-card-clean fade-up fade-up-3">
+                <div class="stat-icon-clean"><i class="fas fa-users"></i></div>
+                <div class="stat-value-clean" id="totalUsers">147</div>
+                <div class="stat-label-clean">Active Users</div>
+            </div>
+            <div class="stat-card-clean fade-up fade-up-4">
+                <div class="stat-icon-clean"><i class="fas fa-clock"></i></div>
+                <div class="stat-value-clean" id="todayScans">—</div>
+                <div class="stat-label-clean">Today's Scans</div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div style="margin-bottom:3rem;">
+            <div class="section-header fade-up">
+                <h2 class="section-title-clean">Platform Features</h2>
+                <p class="section-subtitle-clean">Everything you need for AI-powered brain tumor diagnostics</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card-clean fade-up fade-up-1">
+                    <div class="feature-icon-clean"><i class="fas fa-robot"></i></div>
+                    <h3 class="feature-title-clean">AI-Powered Diagnosis</h3>
+                    <p class="feature-desc-clean">Deep learning CNN achieving 94%+ accuracy. Classifies glioma, meningioma, pituitary, and no-tumor cases with confidence scoring.</p>
+                </div>
+                <div class="feature-card-clean fade-up fade-up-2">
+                    <div class="feature-icon-clean"><i class="fas fa-fire"></i></div>
+                    <h3 class="feature-title-clean">Grad-CAM Heatmaps</h3>
+                    <p class="feature-desc-clean">Explainable AI that visualizes exactly which regions the model focuses on — building clinician trust in automated diagnoses.</p>
+                </div>
+                <div class="feature-card-clean fade-up fade-up-3">
+                    <div class="feature-icon-clean"><i class="fas fa-file-pdf"></i></div>
+                    <h3 class="feature-title-clean">Medical PDF Reports</h3>
+                    <p class="feature-desc-clean">Comprehensive clinical documentation with tumor classification, confidence metrics, severity assessment, and follow-up schedules.</p>
+                </div>
+                <div class="feature-card-clean fade-up fade-up-1">
+                    <div class="feature-icon-clean"><i class="fas fa-heartbeat"></i></div>
+                    <h3 class="feature-title-clean">Symptom Checker</h3>
+                    <p class="feature-desc-clean">Evaluate 8 critical symptom categories including headaches, seizures, vision changes, and cognitive function in real time.</p>
+                </div>
+                <div class="feature-card-clean fade-up fade-up-2">
+                    <div class="feature-icon-clean"><i class="fas fa-brain"></i></div>
+                    <h3 class="feature-title-clean">3D Tumor Segmentation</h3>
+                    <p class="feature-desc-clean">U-Net neural network precisely delineates tumor boundaries, calculates volumetric measurements, and generates enhanced overlays.</p>
+                </div>
+                <div class="feature-card-clean fade-up fade-up-3">
+                    <div class="feature-icon-clean"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="feature-title-clean">Severity Prediction</h3>
+                    <p class="feature-desc-clean">Multi-factor risk stratification combining tumor type, confidence scores, and segmentation metrics for actionable clinical guidance.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Symptoms Checker -->
+        <div class="symptoms-section fade-up">
+            <div class="section-header">
+                <h2 class="section-title-clean"><i class="fas fa-stethoscope" style="color:var(--primary);margin-right:0.5rem;"></i>Symptom Checker</h2>
+                <p class="section-subtitle-clean">Select your current symptoms to receive a personalized assessment</p>
+            </div>
+
+            <div class="card-clean">
+                <div style="padding:1.75rem;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="symptom-group">
+                            <label><i class="fas fa-head-side-virus" style="color:var(--primary);margin-right:0.4rem;"></i>Headache Intensity</label>
+                            <select id="headache_intensity">
+                                <option value="none">None</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="symptom-group">
+                            <label><i class="fas fa-clock" style="color:var(--primary);margin-right:0.4rem;"></i>Headache Frequency</label>
+                            <select id="headache_frequency">
+                                <option value="none">None</option>
+                                <option value="mild">Rare</option>
+                                <option value="moderate">Occasional</option>
+                                <option value="severe">Frequent</option>
+                                <option value="critical">Constant</option>
+                            </select>
+                        </div>
+                        <div class="symptom-group">
+                            <label><i class="fas fa-brain" style="color:var(--primary);margin-right:0.4rem;"></i>Seizures</label>
+                            <select id="seizures">
+                                <option value="none">None</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="symptom-group">
+                            <label><i class="fas fa-eye" style="color:var(--primary);margin-right:0.4rem;"></i>Vision Changes</label>
+                            <select id="vision_changes">
+                                <option value="none">None</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="symptom-group">
+                            <label><i class="fas fa-running" style="color:var(--primary);margin-right:0.4rem;"></i>Motor Deficits</label>
+                            <select id="motor_deficits">
+                                <option value="none">None</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="symptom-group">
+                            <label><i class="fas fa-brain" style="color:var(--primary);margin-right:0.4rem;"></i>Cognitive Changes</label>
+                            <select id="cognitive_changes">
+                                <option value="none">None</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="symptom-group">
+                            <label><i class="fas fa-user-friends" style="color:var(--primary);margin-right:0.4rem;"></i>Personality Changes</label>
+                            <select id="personality_changes">
+                                <option value="none">None</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div class="symptom-group">
+                            <label><i class="fas fa-notes-medical" style="color:var(--primary);margin-right:0.4rem;"></i>Other Symptoms</label>
+                            <select id="other_symptoms">
+                                <option value="none">None</option>
+                                <option value="mild">Mild</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="severe">Severe</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="text-align:center;margin-top:1.5rem;">
+                        <button class="btn-primary-clean btn-lg-clean" id="assessSymptomsBtn">
+                            <i class="fas fa-heartbeat"></i> Assess Symptoms
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="symptomsResults" class="results-hidden" style="margin-top:1.5rem;">
+                <div class="card-clean">
+                    <div style="padding:1.75rem;">
+                        <h4 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0 0 1.25rem;">
+                            <i class="fas fa-clipboard-check" style="color:var(--primary);margin-right:0.5rem;"></i>Assessment Results
+                        </h4>
+                        <div class="severity-display">
+                            <div class="severity-box">
+                                <span class="label">Severity Score</span>
+                                <span class="value" id="severityScore">0.00</span>
+                            </div>
+                            <div class="severity-box">
+                                <span class="label">Severity Level</span>
+                                <span class="sev-badge" id="severityLevel">Minimal</span>
+                            </div>
+                            <div class="severity-box">
+                                <span class="label">Urgency</span>
+                                <span class="urg-badge" id="urgencyLevel">Routine</span>
+                            </div>
+                        </div>
+
+                        <div id="recoSection">
+                            <h5 style="font-size:0.875rem;font-weight:700;color:var(--text-dark);margin-bottom:0.75rem;">
+                                <i class="fas fa-user-md" style="color:var(--primary);margin-right:0.4rem;"></i>Medical Recommendations
+                            </h5>
+                            <ul class="reco-list" id="recommendationsList"></ul>
+                        </div>
+
+                        <div id="warningSignsSection" style="margin-top:1.25rem;display:none;">
+                            <h5 style="font-size:0.875rem;font-weight:700;color:var(--warning);margin-bottom:0.75rem;">
+                                <i class="fas fa-exclamation-triangle" style="margin-right:0.4rem;"></i>Warning Signs to Watch
+                            </h5>
+                            <ul class="reco-list warning" id="warningSignsList"></ul>
+                        </div>
+
+                        <div id="emergencySection" style="margin-top:1.25rem;display:none;">
+                            <div style="border:1.5px solid var(--danger);border-radius:var(--radius-sm);padding:1rem;background:#fee2e2;">
+                                <h5 style="font-size:0.875rem;font-weight:700;color:var(--danger);margin-bottom:0.75rem;">
+                                    <i class="fas fa-ambulance" style="margin-right:0.4rem;"></i>Emergency Instructions
+                                </h5>
+                                <ul class="reco-list emergency" id="emergencyList"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="table-card fade-up">
+            <div class="table-card-header">
+                <i class="fas fa-history" style="color:var(--primary);margin-right:0.5rem;"></i>Recent Activity
+            </div>
+            <div style="overflow-x:auto;">
+                <table class="table-clean">
+                    <thead>
+                        <tr>
+                            <th>Tumor Type</th>
+                            <th>Confidence</th>
+                            <th>Date</th>
+                            <th>Patient</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentActivity">
+                        <tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:1.5rem;">Loading recent activity...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions fade-up">
+            {% if user.is_authenticated %}
+                <a href="{% url 'ai_detect' %}" class="btn-outline-clean btn-lg-clean">
+                    <i class="fas fa-robot"></i> AI Detection
+                </a>
+                <a href="{% url 'upload' %}" class="btn-primary-clean btn-lg-clean">
+                    <i class="fas fa-upload"></i> Upload MRI
+                </a>
+                <a href="{% url 'dashboard' %}" class="btn-outline-clean btn-lg-clean">
+                    <i class="fas fa-chart-bar"></i> Dashboard
+                </a>
+                <a href="{% url 'export-dashboard' %}" class="btn-success-clean btn-lg-clean">
+                    <i class="fas fa-download"></i> Export Report
+                </a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn-primary-clean btn-lg-clean">
+                    <i class="fas fa-user-plus"></i> Get Started
+                </a>
+                <a href="{% url 'login' %}" class="btn-outline-clean btn-lg-clean">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </a>
+            {% endif %}
+        </div>
+
+    </div><!-- /page-container -->
+
+    <script>
+        // ---- Dashboard data loader ----
+        function loadDashboardData() {
+            fetch('/dashboard-data/')
+                .then(r => r.json())
+                .then(data => {
+                    const totalScans = data.tumor_values.reduce((a, b) => a + b, 0);
+                    const avgConf = data.history.length > 0
+                        ? (data.history.reduce((s, r) => s + parseFloat(r.confidence), 0) / data.history.length).toFixed(1)
+                        : 0;
+                    const todayScans = data.trend_counts.length > 0
+                        ? data.trend_counts[data.trend_counts.length - 1] : 0;
+
+                    animateValue('totalScans', 0, totalScans, 900);
+                    animateValue('avgConfidence', 0, avgConf, 900, '%');
+                    animateValue('todayScans', 0, todayScans, 900);
+
+                    updateRecentActivity(data.history);
+                })
+                .catch(() => {
+                    document.getElementById('totalScans').textContent = '—';
+                    document.getElementById('avgConfidence').textContent = '—';
+                    document.getElementById('todayScans').textContent = '—';
+                    document.getElementById('recentActivity').innerHTML =
+                        '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:1.5rem;">No data available</td></tr>';
+                });
+        }
+
+        function animateValue(id, start, end, duration, suffix = '') {
+            const el = document.getElementById(id);
+            const range = end - start;
+            const step = range / (duration / 16);
+            let cur = start;
+            const timer = setInterval(() => {
+                cur += step;
+                if ((step > 0 && cur >= end) || (step <= 0 && cur <= end)) {
+                    cur = end; clearInterval(timer);
+                }
+                el.textContent = Math.round(cur) + suffix;
+            }, 16);
+        }
+
+        function updateRecentActivity(history) {
+            const tbody = document.getElementById('recentActivity');
+            if (!history || history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:1.5rem;">No scans recorded yet</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            history.slice(0, 5).forEach((row, i) => {
+                const tr = document.createElement('tr');
+                const tumorBadge = row.tumor === 'notumor'
+                    ? '<span class="badge-green" style="padding:0.2rem 0.6rem;border-radius:999px;font-size:0.78rem;font-weight:600;">No Tumor</span>'
+                    : `<span style="font-weight:600;color:var(--text-dark);text-transform:capitalize;">${row.tumor}</span>`;
+                tr.innerHTML = `
+                    <td>${tumorBadge}</td>
+                    <td><span style="color:var(--primary);font-weight:600;">${row.confidence}%</span></td>
+                    <td style="color:var(--text-muted);font-size:0.85rem;">${row.date}</td>
+                    <td style="color:var(--text-muted);">Patient ${i + 1}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ---- Symptoms checker ----
+        document.addEventListener('DOMContentLoaded', function () {
+            loadDashboardData();
+
+            document.getElementById('assessSymptomsBtn').addEventListener('click', function () {
+                assessSymptoms();
+            });
+        });
+
+        function assessSymptoms() {
+            const symptoms = {
+                headache_intensity: document.getElementById('headache_intensity').value,
+                headache_frequency: document.getElementById('headache_frequency').value,
+                seizures:           document.getElementById('seizures').value,
+                vision_changes:     document.getElementById('vision_changes').value,
+                motor_deficits:     document.getElementById('motor_deficits').value,
+                cognitive_changes:  document.getElementById('cognitive_changes').value,
+                personality_changes:document.getElementById('personality_changes').value,
+                other_symptoms:     document.getElementById('other_symptoms').value
+            };
+
+            const btn = document.getElementById('assessSymptomsBtn');
+            const origHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Assessing...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const scores = { none:0, mild:1, moderate:2, severe:3, critical:4 };
+                const weights = {
+                    headache_intensity:0.15, headache_frequency:0.10,
+                    seizures:0.20, vision_changes:0.15, motor_deficits:0.15,
+                    cognitive_changes:0.10, personality_changes:0.05, other_symptoms:0.10
+                };
+                let total = 0;
+                for (const [k, v] of Object.entries(symptoms)) {
+                    if (weights[k] && scores[v]) total += weights[k] * scores[v];
+                }
+
+                let level = 'minimal', urgency = 'routine';
+                if (total >= 3.0)      { level = 'critical'; urgency = 'emergency'; }
+                else if (total >= 2.0) { level = 'severe';   urgency = 'urgent'; }
+                else if (total >= 1.0) { level = 'moderate'; urgency = 'soon'; }
+                else if (total >= 0.5) { level = 'mild';     urgency = 'routine'; }
+
+                const recos     = generateRecommendations(symptoms, level, urgency);
+                const warnings  = generateWarningSigns(symptoms, level);
+                const emergency = urgency === 'emergency' ? generateEmergencyInstructions() : [];
+
+                updateSymptomsResults(total, level, urgency, recos, warnings, emergency);
+                btn.innerHTML = origHTML;
+                btn.disabled = false;
+            }, 1200);
+        }
+
+        function generateRecommendations(symptoms, level, urgency) {
+            const r = [];
+            if (level === 'critical') {
+                r.push('Seek immediate emergency medical attention');
+                r.push('Call emergency services or go to nearest emergency department');
+                r.push('Do not drive yourself — call an ambulance');
+            } else if (level === 'severe') {
+                r.push('Seek urgent medical evaluation within 24 hours');
+                r.push('Contact your healthcare provider immediately');
+                r.push('Consider the emergency department if symptoms worsen');
+            } else if (level === 'moderate') {
+                r.push('Schedule a medical appointment within 1–2 weeks');
+                r.push('Monitor symptoms closely for any changes');
+                r.push('Keep a symptom diary');
+            } else {
+                r.push('Continue routine monitoring');
+                r.push('Maintain regular medical check-ups');
+                r.push('Contact your doctor if symptoms worsen');
+            }
+            if (symptoms.headache_intensity !== 'none') r.push('Monitor headache patterns and triggers');
+            if (symptoms.seizures !== 'none') r.push('Avoid driving until cleared by a doctor');
+            if (symptoms.vision_changes !== 'none') r.push('Schedule a comprehensive eye examination');
+            if (symptoms.motor_deficits !== 'none') r.push('Consider a physical therapy evaluation');
+            if (symptoms.cognitive_changes !== 'none') r.push('Consider a neuropsychological evaluation');
+            return r;
+        }
+
+        function generateWarningSigns(symptoms, level) {
+            const w = [
+                'Sudden worsening of any symptom',
+                'New symptom development',
+                'Difficulty speaking or understanding',
+                'Weakness or numbness on one side of body',
+                'Severe headache with fever or stiff neck',
+                'Confusion or personality changes',
+                'Vision problems or double vision',
+                'Difficulty walking or loss of balance',
+                'Seizures or convulsions'
+            ];
+            if (symptoms.seizures !== 'none') w.push('Prolonged seizure activity or injury during seizure');
+            if (symptoms.vision_changes !== 'none') w.push('Sudden vision loss or double vision');
+            return w;
+        }
+
+        function generateEmergencyInstructions() {
+            return [
+                'CALL 911 OR LOCAL EMERGENCY SERVICES IMMEDIATELY',
+                'Go to the nearest emergency department',
+                'Do not drive yourself — call an ambulance',
+                'Bring all medications and medical records',
+                'Inform staff about brain tumor concerns',
+                'Have someone accompany you to hospital'
+            ];
+        }
+
+        function updateSymptomsResults(score, level, urgency, recos, warnings, emergency) {
+            document.getElementById('severityScore').textContent = score.toFixed(2);
+
+            const sevBadge = document.getElementById('severityLevel');
+            sevBadge.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+            sevBadge.className = `sev-badge badge-severity-${level}`;
+
+            const urgBadge = document.getElementById('urgencyLevel');
+            urgBadge.textContent = urgency.charAt(0).toUpperCase() + urgency.slice(1);
+            urgBadge.className = `urg-badge badge-urgency-${urgency}`;
+
+            const recoList = document.getElementById('recommendationsList');
+            recoList.innerHTML = '';
+            recos.forEach(rec => { const li = document.createElement('li'); li.textContent = rec; recoList.appendChild(li); });
+
+            const warnSection = document.getElementById('warningSignsSection');
+            const warnList = document.getElementById('warningSignsList');
+            warnList.innerHTML = '';
+            warnings.forEach(w => { const li = document.createElement('li'); li.textContent = w; warnList.appendChild(li); });
+            warnSection.style.display = 'block';
+
+            const emSection = document.getElementById('emergencySection');
+            const emList = document.getElementById('emergencyList');
+            if (emergency.length > 0) {
+                emList.innerHTML = '';
+                emergency.forEach(e => { const li = document.createElement('li'); li.textContent = e; emList.appendChild(li); });
+                emSection.style.display = 'block';
+            } else {
+                emSection.style.display = 'none';
+            }
+
+            const resultsEl = document.getElementById('symptomsResults');
+            resultsEl.classList.remove('results-hidden');
+            resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>

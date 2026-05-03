@@ -1,0 +1,59 @@
+{
+  "success": true,
+  "timestamp": "2026-03-01T11:39:01.419462",
+  "classification": {
+    "tumor_type": "glioma",
+    "confidence": 94.54120455272847,
+    "probabilities": {
+      "glioma": 94.54120455272847,
+      "meningioma": 1.8195984824238423,
+      "notumor": 1.8195984824238423,
+      "pituitary": 1.8195984824238423
+    },
+    "error": null
+  },
+  "segmentation": {
+    "metrics": {
+      "tumor_area": 10307,
+      "tumor_percentage": 62.908935546875,
+      "centroid": [
+        64,
+        65
+      ],
+      "error": null
+    },
+    "overlay_path": "C:\\Users\\pavan\\OneDrive\\Desktop\\dxc - Copy\\brain_tumor_ai\\media\\ai_results\\segmented_Y3_DW8ujWO.jpg"
+  },
+  "severity": {
+    "severity_score": 0.9180000000000001,
+    "severity_level": "high",
+    "risk_level": "Critical",
+    "confidence_score": 0.9,
+    "area_score": 0.9,
+    "type_score": 0.96,
+    "recommendations": [
+      "Urgent medical attention required",
+      "Immediate surgical consultation necessary",
+      "Begin treatment within 2-4 weeks",
+      "Consider radiation therapy and chemotherapy",
+      "Consider genetic testing for personalized treatment",
+      "Discuss clinical trial options"
+    ],
+    "error": null
+  },
+  "summary": {
+    "tumor_type": "glioma",
+    "confidence": 94.54120455272847,
+    "severity_level": "high",
+    "risk_level": "Critical",
+    "requires_attention": true,
+    "recommendation_count": 6,
+    "top_prediction": "glioma",
+    "all_predictions": {
+      "glioma": 94.54120455272847,
+      "meningioma": 1.8195984824238423,
+      "notumor": 1.8195984824238423,
+      "pituitary": 1.8195984824238423
+    }
+  }
+}

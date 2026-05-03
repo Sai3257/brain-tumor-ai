@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "timestamp": "2026-05-03T21:31:49.467376",
+  "classification": {
+    "tumor_type": "notumor",
+    "confidence": 98.89617562294006,
+    "probabilities": {
+      "glioma": 0.0,
+      "meningioma": 1.09,
+      "notumor": 98.9,
+      "pituitary": 0.01
+    },
+    "error": null
+  },
+  "segmentation": {
+    "metrics": {
+      "tumor_area": 22749,
+      "tumor_percentage": 34.71221923828125,
+      "centroid": [
+        120,
+        119
+      ],
+      "error": null
+    },
+    "overlay_path": "C:\\Users\\saina\\OneDrive\\Desktop\\final_year_project\\dxc-copy\\brain_tumor_ai\\media\\ai_results\\segmented_bran_tumor_tlmq48A.jpg",
+    "overlay_url": "/media/ai_results/segmented_bran_tumor_tlmq48A.jpg",
+    "overlay_available": true
+  },
+  "severity": {
+    "severity_score": 0.63,
+    "severity_level": "high",
+    "risk_level": "Safe",
+    "confidence_score": 0.9,
+    "area_score": 0.9,
+    "type_score": 0.0,
+    "recommendations": [
+      "No tumor detected - continue regular checkups",
+      "Maintain healthy lifestyle",
+      "Annual MRI scans recommended"
+    ],
+    "error": null
+  },
+  "grad_cam": {
+    "heatmap": true,
+    "heatmap_path": null,
+    "heatmap_url": null
+  },
+  "summary": {
+    "tumor_type": "notumor",
+    "confidence": 98.89617562294006,
+    "severity_level": "high",
+    "risk_level": "Safe",
+    "requires_attention": true,
+    "recommendation_count": 3,
+    "top_prediction": "notumor",
+    "all_predictions": {
+      "glioma": 0.0,
+      "meningioma": 1.09,
+      "notumor": 98.9,
+      "pituitary": 0.01
+    }
+  }
+}

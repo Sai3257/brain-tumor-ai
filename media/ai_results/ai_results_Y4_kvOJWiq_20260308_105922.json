@@ -1,0 +1,86 @@
+{
+  "success": true,
+  "timestamp": "2026-03-08T10:59:22.989133",
+  "classification": {
+    "tumor_type": "notumor",
+    "confidence": 40.97178337097168,
+    "probabilities": {
+      "glioma": 23.642751252244004,
+      "meningioma": 24.00682213448861,
+      "notumor": 28.92383224239254,
+      "pituitary": 23.426594370874845
+    },
+    "prediction_quality": "high",
+    "raw_confidence": 41.03744328022003,
+    "consensus_score": 0.8609853995908565,
+    "ensemble_predictions": [
+      [
+        0.000529116194229573,
+        0.0998983383178711,
+        0.893564760684967,
+        0.006007792428135872
+      ],
+      [
+        0.0005377602647058666,
+        0.1237751692533493,
+        0.8703263998031616,
+        0.005360713228583336
+      ],
+      [
+        0.16674083471298218,
+        0.18676863610744476,
+        0.6459218263626099,
+        0.0005686592194251716
+      ]
+    ],
+    "error": null
+  },
+  "segmentation": {
+    "metrics": {
+      "tumor_area": 30336,
+      "tumor_percentage": 46.2890625,
+      "centroid": [
+        126,
+        131
+      ],
+      "error": null
+    },
+    "overlay_path": "C:\\Users\\pavan\\OneDrive\\Desktop\\dxc - Copy\\brain_tumor_ai\\media\\ai_results\\segmented_Y4_kvOJWiq.jpg",
+    "overlay_url": "/media/ai_results/segmented_Y4_kvOJWiq.jpg",
+    "overlay_available": true
+  },
+  "severity": {
+    "severity_score": 0.35,
+    "severity_level": "low",
+    "risk_level": "Safe",
+    "confidence_score": 0.1,
+    "area_score": 0.9,
+    "type_score": 0.0,
+    "recommendations": [
+      "No tumor detected - continue regular checkups",
+      "Maintain healthy lifestyle",
+      "Annual MRI scans recommended"
+    ],
+    "error": null
+  },
+  "grad_cam": {
+    "heatmap": true,
+    "heatmap_path": null,
+    "heatmap_url": null
+  },
+  "summary": {
+    "tumor_type": "notumor",
+    "confidence": 40.97178337097168,
+    "severity_level": "low",
+    "risk_level": "Safe",
+    "requires_attention": false,
+    "recommendation_count": 3,
+    "top_prediction": "notumor",
+    "all_predictions": {
+      "glioma": 23.642751252244004,
+      "meningioma": 24.00682213448861,
+      "notumor": 28.92383224239254,
+      "pituitary": 23.426594370874845
+    }
+  }
+}

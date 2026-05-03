@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diagnosis Dashboard - Brain Tumor AI</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/animations.css' %}" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(-45deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #ffc371 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            background: linear-gradient(45deg, #52b788, #38f9d7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: scaleIn 0.5s ease-out, pulse 2s infinite;
+        }
+
+        .result-title {
+            font-weight: 900;
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, #ffffff, #f8f9fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Main Image Section */
+        .main-image-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-image-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .main-image-container {
+            text-align: center;
+            position: relative;
+        }
+
+        .main-result-image {
+            max-width: 100%;
+            height: auto;
+            max-height: 400px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .main-result-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .diagnosis-badge {
+            position: absolute;
+            top: -20px;
+            right: 20px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+            animation: bounce 2s infinite;
+            z-index: 10;
+        }
+
+        /* Scrolling Cards Section */
+        .metrics-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-weight: 800;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #ffffff, #f8f9fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .scrolling-cards {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 2rem;
+            padding: 1rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scrolling-cards::-webkit-scrollbar {
+            height: 12px;
+        }
+
+        .scrolling-cards::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .scrolling-cards::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .scrolling-cards::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .metric-card {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            min-width: 350px;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .severity-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .confidence-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .risk-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .metric-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .metric-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0.95;
+        }
+
+        .metric-value {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .metric-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Confidence Progress Bar */
+        .confidence-progress {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            height: 30px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #52b788, #38f9d7);
+            border-radius: 25px;
+            transition: width 1.5s ease-out;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .confidence-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        /* Grad-CAM Section */
+        .gradcam-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradcam-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .gradcam-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gradcam-image-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .gradcam-image {
+            max-width: 100%;
+            height: auto;
+            max-height: 350px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            border: 3px solid rgba(240, 147, 251, 0.5);
+        }
+
+        .gradcam-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .btn-action {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-action:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-success-custom {
+            background: linear-gradient(45deg, #52b788, #38f9d7);
+            color: white;
+        }
+
+        .btn-secondary-custom {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #f5576c, #f093fb);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 25px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(245, 87, 108, 0.4);
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .floating-brain {
+            top: 10%;
+            left: 5%;
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.3);
+            animation-delay: 0s;
+        }
+
+        .floating-heart {
+            top: 20%;
+            right: 8%;
+            font-size: 2.5rem;
+            color: rgba(245, 87, 108, 0.3);
+            animation-delay: 2s;
+        }
+
+        .floating-star {
+            bottom: 15%;
+            left: 10%;
+            font-size: 2rem;
+            color: rgba(82, 183, 136, 0.3);
+            animation-delay: 4s;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .result-title {
+                font-size: 2.5rem;
+            }
+            
+            .metric-card {
+                min-width: 300px;
+                max-width: 350px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-action {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .floating-element {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating Elements -->
+    <div class="floating-element floating-brain">
+        <i class="fas fa-brain"></i>
+    </div>
+    <div class="floating-element floating-heart">
+        <i class="fas fa-heart"></i>
+    </div>
+    <div class="floating-element floating-star">
+        <i class="fas fa-star"></i>
+    </div>
+
+    <a href="{% url 'logout' %}" class="btn logout-btn">
+        <i class="fas fa-sign-out-alt me-2"></i>Logout
+    </a>
+
+    <div class="dashboard-container">
+        <div class="header-section">
+            <div class="success-icon animate-pulse">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1 class="result-title animate-fadeInDown">Analysis Complete!</h1>
+            <p class="subtitle animate-fadeInUp">AI-powered diagnosis results for your MRI scan</p>
+        </div>
+
+        <!-- Main Image Section -->
+        <div class="main-image-section animate-fadeInUp">
+            <div class="main-image-container">
+                <img src="{{ image }}" alt="Original MRI" class="main-result-image">
+                <div class="diagnosis-badge animate-bounce">
+                    {{ tumor }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Scrolling Cards -->
+        <div class="metrics-section">
+            <h2 class="section-title animate-fadeInDown">Key Metrics</h2>
+            <div class="scrolling-cards">
+                <!-- Severity Card -->
+                <div class="metric-card severity-card card-animate animate-slideInScale">
+                    <div class="metric-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="metric-title">Severity Level</h3>
+                    <div class="metric-value text-bright">{{ severity }}</div>
+                    <p class="metric-description">
+                        {% if severity|lower == 'low' %}
+                            Mild condition detected. Regular monitoring recommended.
+                        {% elif severity|lower == 'medium' %}
+                            Moderate condition. Medical consultation advised.
+                        {% else %}
+                            High severity detected. Immediate medical attention recommended.
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- Confidence Card -->
+                <div class="metric-card confidence-card card-animate animate-slideInScale" style="animation-delay: 0.2s;">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="metric-title">Confidence Score</h3>
+                    <div class="metric-value text-bright">{{ confidence }}%</div>
+                    <div class="confidence-progress">
+                        <div class="confidence-fill" style="width: {{ confidence }}%">
+                            {{ confidence }}%
+                        </div>
+                    </div>
+                    <p class="metric-description">
+                        AI model confidence in this diagnosis result.
+                    </p>
+                </div>
+
+                <!-- Risk Card -->
+                <div class="metric-card risk-card card-animate animate-slideInScale" style="animation-delay: 0.4s;">
+                    <div class="metric-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="metric-title">Risk Assessment</h3>
+                    <div class="metric-value text-bright">{{ risk }}</div>
+                    <p class="metric-description">
+                        Overall risk level based on tumor type and confidence score.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grad-CAM Section -->
+        <div class="gradcam-section">
+            <h2 class="gradcam-title">
+                <i class="fas fa-fire me-3"></i>AI Heatmap Analysis
+            </h2>
+            <div class="gradcam-image-container">
+                <img src="{{ heatmap }}" alt="Grad-CAM Heatmap" class="gradcam-image">
+            </div>
+            <p class="text-center text-light">
+                <i class="fas fa-info-circle me-2"></i>
+                AI attention map highlighting regions of interest for tumor detection
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="/" class="btn-action btn-primary-custom btn-animate">
+                <i class="fas fa-upload me-2"></i>Upload Another
+            </a>
+            <a href="{{ pdf }}" class="btn-action btn-success-custom btn-animate">
+                <i class="fas fa-file-pdf me-2"></i>Download Report
+            </a>
+            <a href="{% url 'dashboard' %}" class="btn-action btn-secondary-custom btn-animate">
+                <i class="fas fa-chart-bar me-2"></i>Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Animate confidence bar on page load
+        window.addEventListener('load', () => {
+            const confidenceFill = document.querySelector('.confidence-fill');
+            setTimeout(() => {
+                confidenceFill.style.width = '{{ confidence }}%';
+            }, 500);
+        });
+
+        // Add interactive hover effects
+        document.querySelectorAll('.metric-card').forEach((card, index) => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) scale(1.03) rotateX(5deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1) rotateX(0)';
+            });
+        });
+
+        // Smooth scroll for cards
+        const scrollingCards = document.querySelector('.scrolling-cards');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        scrollingCards.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - scrollingCards.offsetLeft;
+            scrollLeft = scrollingCards.scrollLeft;
+        });
+
+        scrollingCards.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+
+        scrollingCards.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+
+        scrollingCards.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollingCards.offsetLeft;
+            const walk = (x - startX) * 2;
+            scrollingCards.scrollLeft = scrollLeft - walk;
+        });
+    </script>
+</body>
+</html>

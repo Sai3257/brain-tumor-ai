@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — Brain Tumor AI</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/light_theme.css' %}" rel="stylesheet">
+    <style>
+        .form-group { margin-bottom: 1.25rem; }
+        .input-icon-wrap { position: relative; }
+        .input-icon-wrap .icon {
+            position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 0.9rem;
+        }
+        .input-icon-wrap .form-control-clean { padding-left: 2.4rem; }
+        .role-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .role-option { display: none; }
+        .role-label {
+            display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+            padding: 0.875rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+            cursor: pointer; transition: border-color 0.2s, background 0.2s;
+            font-size: 0.875rem; font-weight: 600; color: var(--text-body);
+        }
+        .role-label i { font-size: 1.4rem; color: var(--text-muted); }
+        .role-option:checked + .role-label {
+            border-color: var(--primary); background: var(--primary-light);
+            color: var(--primary);
+        }
+        .role-option:checked + .role-label i { color: var(--primary); }
+        .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    </style>
+</head>
+<body class="auth-page">
+    <div class="auth-card fade-up">
+        <div style="text-align:center; margin-bottom:2rem;">
+            <div style="width:56px;height:56px;background:var(--primary-light);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+                <i class="fas fa-brain" style="font-size:1.5rem;color:var(--primary);"></i>
+            </div>
+            <h1 style="font-size:1.5rem;font-weight:700;color:var(--text-dark);margin:0 0 0.25rem;">Create your account</h1>
+            <p style="color:var(--text-muted);font-size:0.9rem;margin:0;">Join Brain Tumor AI today</p>
+        </div>
+
+        {% if error %}
+        <div style="background:#fee2e2;border:1px solid #fca5a5;color:#dc2626;padding:0.75rem 1rem;border-radius:8px;margin-bottom:1.25rem;font-size:0.875rem;font-weight:500;">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-label-clean" for="username">Username</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-user icon"></i>
+                    <input type="text" id="username" name="username" class="form-control-clean"
+                           placeholder="Choose a username" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label-clean" for="password">Password</label>
+                <div class="input-icon-wrap">
+                    <i class="fas fa-lock icon"></i>
+                    <input type="password" id="password" name="password" class="form-control-clean"
+                           placeholder="Create a password" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label-clean">Select your role</label>
+                <div class="role-options">
+                    <div>
+                        <input type="radio" id="role_patient" name="role" value="patient" class="role-option" required>
+                        <label for="role_patient" class="role-label">
+                            <i class="fas fa-user-injured"></i>
+                            Patient
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="role_doctor" name="role" value="doctor" class="role-option">
+                        <label for="role_doctor" class="role-label">
+                            <i class="fas fa-user-md"></i>
+                            Doctor
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary-clean btn-lg-clean" style="width:100%;justify-content:center;margin-top:0.5rem;">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+
+        <hr class="divider">
+
+        <p style="text-align:center;font-size:0.875rem;color:var(--text-muted);margin:0;">
+            Already have an account?
+            <a href="{% url 'login' %}" style="color:var(--primary);font-weight:600;text-decoration:none;">Sign in</a>
+        </p>
+    </div>
+</body>
+</html>

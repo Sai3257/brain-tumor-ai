@@ -1,0 +1,66 @@
+{
+  "success": true,
+  "timestamp": "2026-03-09T21:18:23.180146",
+  "classification": {
+    "tumor_type": "meningioma",
+    "confidence": 90.32546643662873,
+    "probabilities": {
+      "meningioma": 90.32546643662873,
+      "glioma": 3.869813425348508,
+      "pituitary": 3.869813425348508,
+      "notumor": 1.934906712674254
+    },
+    "prediction_quality": "ultra_enhanced_fallback",
+    "raw_confidence": 90.32546643662873,
+    "consensus_score": 0.8926730756541135,
+    "prediction_variance": 0.01179132607682078,
+    "error": null
+  },
+  "segmentation": {
+    "metrics": {
+      "tumor_area": 33385,
+      "tumor_percentage": 50.94146728515625,
+      "centroid": [
+        125,
+        131
+      ],
+      "error": null
+    },
+    "overlay_path": "C:\\Users\\pavan\\OneDrive\\Desktop\\dxc - Copy\\brain_tumor_ai\\media\\ai_results\\segmented_Y1_Oxh9VEJ.jpg",
+    "overlay_url": "/media/ai_results/segmented_Y1_Oxh9VEJ.jpg",
+    "overlay_available": true
+  },
+  "severity": {
+    "severity_score": 0.81,
+    "severity_level": "very_high",
+    "risk_level": "Unknown",
+    "confidence_score": 0.9,
+    "area_score": 0.9,
+    "type_score": 0.6,
+    "recommendations": [
+      "Hormone level monitoring may be necessary",
+      "Discuss surgical removal options"
+    ],
+    "error": null
+  },
+  "grad_cam": {
+    "heatmap": true,
+    "heatmap_path": null,
+    "heatmap_url": null
+  },
+  "summary": {
+    "tumor_type": "meningioma",
+    "confidence": 90.32546643662873,
+    "severity_level": "very_high",
+    "risk_level": "Unknown",
+    "requires_attention": false,
+    "recommendation_count": 2,
+    "top_prediction": "meningioma",
+    "all_predictions": {
+      "meningioma": 90.32546643662873,
+      "glioma": 3.869813425348508,
+      "pituitary": 3.869813425348508,
+      "notumor": 1.934906712674254
+    }
+  }
+}

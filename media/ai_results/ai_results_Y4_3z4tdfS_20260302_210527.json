@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "timestamp": "2026-03-02T21:05:27.489898",
+  "classification": {
+    "tumor_type": "meningioma",
+    "confidence": 88.72511580252916,
+    "probabilities": {
+      "meningioma": 88.72511580252916,
+      "glioma": 4.509953678988336,
+      "pituitary": 4.509953678988336,
+      "notumor": 2.254976839494168
+    },
+    "prediction_quality": "ultra_enhanced_fallback",
+    "raw_confidence": 88.72511580252916,
+    "consensus_score": 0.8883432689243678,
+    "prediction_variance": 0.013743885270583407,
+    "error": null
+  },
+  "segmentation": {
+    "metrics": {
+      "tumor_area": 8537,
+      "tumor_percentage": 52.105712890625,
+      "centroid": [
+        62,
+        64
+      ],
+      "error": null
+    },
+    "overlay_path": "C:\\Users\\pavan\\OneDrive\\Desktop\\dxc - Copy\\brain_tumor_ai\\media\\ai_results\\segmented_Y4_3z4tdfS.jpg"
+  },
+  "severity": {
+    "severity_score": 0.74,
+    "severity_level": "high",
+    "risk_level": "Critical",
+    "confidence_score": 0.7,
+    "area_score": 0.9,
+    "type_score": 0.6,
+    "recommendations": [
+      "Urgent medical attention required",
+      "Immediate surgical consultation necessary",
+      "Begin treatment within 2-4 weeks",
+      "Consider radiation therapy and chemotherapy",
+      "Hormone level monitoring may be necessary",
+      "Discuss surgical removal options"
+    ],
+    "error": null
+  },
+  "summary": {
+    "tumor_type": "meningioma",
+    "confidence": 88.72511580252916,
+    "severity_level": "high",
+    "risk_level": "Critical",
+    "requires_attention": true,
+    "recommendation_count": 6,
+    "top_prediction": "meningioma",
+    "all_predictions": {
+      "meningioma": 88.72511580252916,
+      "glioma": 4.509953678988336,
+      "pituitary": 4.509953678988336,
+      "notumor": 2.254976839494168
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "success": true,
+  "timestamp": "2026-03-09T21:06:50.537328",
+  "classification": {
+    "tumor_type": "meningioma",
+    "confidence": 89.91995874005188,
+    "probabilities": {
+      "meningioma": 89.91995874005188,
+      "glioma": 4.032016503979247,
+      "pituitary": 4.032016503979247,
+      "notumor": 2.0160082519896236
+    },
+    "prediction_quality": "ultra_enhanced_fallback",
+    "raw_confidence": 89.91995874005188,
+    "consensus_score": 0.8575201720191541,
+    "prediction_variance": 0.02767126987955585,
+    "error": null
+  },
+  "segmentation": {
+    "metrics": {
+      "tumor_area": 32863,
+      "tumor_percentage": 50.14495849609375,
+      "centroid": [
+        133,
+        137
+      ],
+      "error": null
+    },
+    "overlay_path": "C:\\Users\\pavan\\OneDrive\\Desktop\\dxc - Copy\\brain_tumor_ai\\media\\ai_results\\segmented_Y2_O51P6RR.jpg",
+    "overlay_url": "/media/ai_results/segmented_Y2_O51P6RR.jpg",
+    "overlay_available": true
+  },
+  "severity": {
+    "severity_score": 0.74,
+    "severity_level": "high",
+    "risk_level": "Critical",
+    "confidence_score": 0.7,
+    "area_score": 0.9,
+    "type_score": 0.6,
+    "recommendations": [
+      "Urgent medical attention required",
+      "Immediate surgical consultation necessary",
+      "Begin treatment within 2-4 weeks",
+      "Consider radiation therapy and chemotherapy",
+      "Hormone level monitoring may be necessary",
+      "Discuss surgical removal options"
+    ],
+    "error": null
+  },
+  "grad_cam": {
+    "heatmap": true,
+    "heatmap_path": null,
+    "heatmap_url": null
+  },
+  "summary": {
+    "tumor_type": "meningioma",
+    "confidence": 89.91995874005188,
+    "severity_level": "high",
+    "risk_level": "Critical",
+    "requires_attention": true,
+    "recommendation_count": 6,
+    "top_prediction": "meningioma",
+    "all_predictions": {
+      "meningioma": 89.91995874005188,
+      "glioma": 4.032016503979247,
+      "pituitary": 4.032016503979247,
+      "notumor": 2.0160082519896236
+    }
+  }
+}
